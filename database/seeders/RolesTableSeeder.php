@@ -2,16 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
+use App\Models\Role; // Llamamos la librería Role
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB; // LLamamos la librería Facades DB para utilzarlo en el seeder
 
 class RolesTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         DB::table('roles')->insert([

@@ -9,11 +9,13 @@ use Illuminate\Notifications\Notifiable;
 // use Laravel\Sanctum\HasApiTokens; // HasApiTokens,
 use Illuminate\Database\Eloquent\SoftDeletes; // Agregar la liberia de softdeletes para eliminar los registros logicos de la tabla users (usuario)
 
+// Se ejecuta para este modelo un seeder llamado UsersTableSeeder.php
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-    use SoftDeletes;
+    use SoftDeletes; // Usa la librería de SoftDeletes
 
     /**
      * The attributes that are mass assignable.
@@ -21,17 +23,17 @@ class User extends Authenticatable
      * @var array<int, string>
      */
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at']; // Primer dato a utilizar
 
-    // Campos que son rellenables
+    // Campos que son rellenables en la tabla Users
     protected $fillable = [
         'nombres',
         'apellidos',
         'teléfono',
-        'foto',
-        'email',
-        'password',
         'rol_id',
+        'email',
+        'foto',
+        'password',
     ];
 
     /**
