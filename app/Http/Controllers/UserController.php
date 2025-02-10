@@ -22,31 +22,35 @@ class UserController extends Controller
     }
 
     public function store(Request $request) {
-        $request->validate([
-            'nombres'   => 'required|string|max:255',
-            'apellidos' => 'required|string|max:255',
-            'teléfono'  => 'required|string|max:15',
-            'email'     => 'required|string|max:255|unique:users',
-            'rol_id'    => 'required|integer',
-            'foto'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        try {
+            $request->validate([
+                'nombres'   => 'required|string|max:255',
+                'apellidos' => 'required|string|max:255',
+                'teléfono'  => 'required|string|max:15',
+                'email'     => 'required|string|max:255|unique:users',
+                'rol_id'    => 'required|integer',
+                'foto'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            ]);
 
-        $fotoPath = null;
-        if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('fotos', 'public');
+            $fotoPath = null;
+            if ($request->hasFile('foto')) {
+                $fotoPath = $request->file('foto')->store('fotos', 'public');
+            }
+
+            User::create([
+                'nombres'   => $request->nombres,
+                'apellidos' => $request->apellidos,
+                'teléfono'  => $request->teléfono,
+                'email'     => $request->email,
+                'rol_id'    => $request->rol_id,
+                'password'  => Hash::make('password'),
+                'foto'      => $fotoPath,
+            ]);
+
+            return redirect()->route('usuarios.index')->with('success', 'Registro Creado Correctamente');
+        } catch (\Exception $e) {
+            return redirect()->route('usuarios.index')->with('error', 'Hubo un problema al crear el registro: ' . $e->getMessage());
         }
-
-        User::create([
-            'nombres'   => $request->nombres,
-            'apellidos' => $request->apellidos,
-            'teléfono'  => $request->teléfono,
-            'email'     => $request->email,
-            'rol_id'    => $request->rol_id,
-            'password'  => Hash::make('password'),
-            'foto'      => $fotoPath,
-        ]);
-
-        return redirect()->route('usuarios.index')->with('success', 'Registro Creado Correctamente');
     }
 
     public function edit($id){
@@ -61,7 +65,7 @@ class UserController extends Controller
             'nombres'   => 'required|string|max:255',
             'apellidos' => 'required|string|max:255',
             'teléfono'  => 'required|string|max:15',
-            'email'     => 'required|string|max:255|unique:users,email' .$id,
+            'email'     => 'required|string|email|max:255|unique:users,email,' .$id,
             'rol_id'    => 'required|integer',
             'foto'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
